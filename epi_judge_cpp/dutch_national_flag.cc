@@ -4,11 +4,49 @@
 #include "test_framework/test_failure.h"
 #include "test_framework/timed_executor.h"
 using std::vector;
+using namespace std;
 typedef enum { kRed, kWhite, kBlue } Color;
 
 void DutchFlagPartition(int pivot_index, vector<Color>* A_ptr) {
   // TODO - you fill in here.
-  return;
+/*
+  vector<Color> A = *A_ptr;
+  int i,j,k;
+  int val = A[pivot_index];
+  int ptr = 0;
+  for(i=0;i<A.size();i++) {
+    if(A[i] < val) {
+      std::swap(A[i],A[ptr++]);
+    }
+  }
+  int ptr2 = A.size()-1;
+  for(j=A.size()-1; j>=0 && A[j] >= val ; --j) {
+    if(A[j] > val) {
+      std::swap(A[j],A[ptr2--]);
+    }
+  }
+*/
+  vector<Color>& A = *A_ptr;
+  Color pivot = A[pivot_index];
+  /**
+   * Keep the following invariants during partitioning:
+   * bottom group: A[0, smaller - 1].
+   * middle group: A[smaller, equal - 1].
+   * unclassified group: A[equal, larger - 1].
+   * top group: A[larger, size(A) - 1].
+   */
+  int smaller = 0, equal = 0, larger = A.size();
+  // Keep iterating as long as there is an unclassified element.
+  while (equal < larger) {
+    // A[equal] is the incoming unclassified element.
+    if (A[equal] < pivot) {
+      swap(A[smaller++], A[equal++]);
+    } else if (A[equal] == pivot) {
+      ++equal;
+    } else {  // A[equal] > pivot.
+      swap(A[equal], A[--larger]);
+    }
+  }
 }
 void DutchFlagPartitionWrapper(TimedExecutor& executor, const vector<int>& A,
                                int pivot_idx) {
