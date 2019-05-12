@@ -1,28 +1,39 @@
 #include "binary_tree_node.h"
 #include "test_framework/generic_test.h"
+struct un {
+  int flag;
+  int height;
+};
+struct un height(const unique_ptr<BinaryTreeNode<int>>& tree) {
+  struct un left_node;
+  struct un right_node;
+  struct un node;
 
-int flag = 1;
-int height(const unique_ptr<BinaryTreeNode<int>>& tree) {
-  int left_height = 0;
-  int right_height = 0;
-  if(tree == NULL)
-    return 0;
-  left_height = height(tree->left);
-  right_height = height(tree->right);
-  if(abs(left_height - right_height) > 1) {
-    flag = 0;
+  if(tree == NULL) {
+    node.flag = 1;
+    node.height = 0;
+    return node;
   }
-
-  if(left_height > right_height)
-    return left_height + 1;
+  left_node = height(tree->left);
+  right_node = height(tree->right);
+  if((abs(left_node.height - right_node.height) <= 1)&&(left_node.flag && right_node.flag)) {
+    node.flag = 1;
+  }
+  else{
+   return {0,0};
+  } 
+  if(left_node.height > right_node.height)
+    node.height = left_node.height + 1;
   else
-    return right_height + 1;
+    node.height = right_node.height + 1;
+  return node;
 }
 
 bool IsBalanced(const unique_ptr<BinaryTreeNode<int>>& tree) {
+  struct un node;
   // TODO - you fill in here
-  height(tree);
-  return flag; 
+  node =  height(tree);
+  return node.flag; 
 }
 
 int main(int argc, char* argv[]) {
